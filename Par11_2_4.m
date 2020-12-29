@@ -45,7 +45,7 @@ L = D - A;
 
 % 时间参数
 tbegin = 0;
-tfinal = 20;
+tfinal = 50;
 dT = 0.1;
 T(:,1) = 0; 
 
@@ -59,10 +59,12 @@ for time = 1:1:times
     % 记录状态
     UXt(:, time) = dT * (L * PXt(:, time) + L * VXt(:, time));
     VXt(:, time+1) = VXt(:, time) - UXt(:, time);
+    VXt(2, time+1) = -2;    % 加入领航者
     PXt(:, time+1) = PXt(:, time) + dT * VXt(:, time);
     
     UYt(:, time) = dT * (L * PYt(:, time) + L * VYt(:, time));
     VYt(:, time+1) = VYt(:, time) - UYt(:, time);
+    VYt(2, time+1) = 2.5;   % 加入领航者
     PYt(:, time+1) = PYt(:, time) + dT * VYt(:, time);
 
 end
