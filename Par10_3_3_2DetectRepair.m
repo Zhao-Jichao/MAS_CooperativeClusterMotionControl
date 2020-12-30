@@ -59,7 +59,7 @@ for time = 1:1:times
     if time >= 201
         % Et(4, time) = -Ut(4, time);                       % 毁坏型
         % Et(4, time) = -Ut(4, time) - 0.005;               % 失控型
-        Et(4, time) = -Ut(4, time) - 0.03*(rand-0.5);     % 干扰型
+        Et(4, time) =  - 0.12*(rand-0.5);     % 干扰型
         
         % 修复        
         U_j(:, time) = epsilon * L_j * Zt(:, time);
