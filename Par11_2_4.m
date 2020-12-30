@@ -49,7 +49,7 @@ L = D - A;
 
 % 时间参数
 tbegin = 0;
-tfinal = 20;
+tfinal = 10;
 dT = 0.1;
 T(:,1) = 0; 
 
@@ -65,10 +65,10 @@ for time = 1:1:times
     VXt(:, time+1) = VXt(:, time) - UXt(:, time);
     VXt(2, time+1) = -2;    % 加入领航者
     % 加入非合作行为
-    if time >= 71
+    if time >= 81
         % EXt(7, time) = -VXt(7, time);                       % 毁坏型
         % EXt(7, time) = -VXt(7, time) - 0.5;               % 失控型
-        EXt(7, time) = -VXt(7, time) - 0.5*(rand-0.5);     % 干扰型
+        EXt(7, time) = - 0.5*(rand-0.5);     % 干扰型
         
         VXt(7, time) = VXt(7, time) + EXt(7, time);
     end
@@ -78,10 +78,10 @@ for time = 1:1:times
     VYt(:, time+1) = VYt(:, time) - UYt(:, time);
     VYt(2, time+1) = 2.5;   % 加入领航者
     % 加入非合作行为
-    if time >= 71
+    if time >= 81
         % EYt(7, time) = -VYt(7, time);                       % 毁坏型
         % EYt(7, time) = -VYt(7, time) - 0.5;               % 失控型
-        EYt(7, time) = -VYt(7, time) - 0.5*(rand-0.5);     % 干扰型
+        EYt(7, time) = - 0.5*(rand-0.5);     % 干扰型
         
         VYt(7, time) = VYt(7, time) + EYt(7, time);
     end
@@ -137,8 +137,16 @@ grid on
 % legend('V_1', 'V_2', 'V_3', 'V_4', 'V_5', 'V_6', 'V_7', 'V_8', 'V_9', 'V_{10}', 'V_{11}', 'V_{12}');
 title('Speed')
 
-
-
-
+subplot(2,3,6)
+plot3(T(1,:),PXt(1,:),PYt(1,:),'-', T(1,:),PXt(2,:),PYt(2,:),':', T(1,:),PXt(3,:),PYt(3,:),'--', T(1,:),PXt(4,:),PYt(4,:),'-.',...
+      T(1,:),PXt(5,:),PYt(5,:), T(1,:),PXt(6,:),PYt(6,:), T(1,:),PXt(7,:),PYt(7,:), T(1,:),PXt(8,:),PYt(8,:),...
+      T(1,:),PXt(9,:),PYt(9,:), T(1,:),PXt(10,:),PYt(10,:), T(1,:),PXt(11,:),PYt(11,:), T(1,:),PXt(12,:),PYt(12,:),...
+     'linewidth',1)
+grid on
+% legend('V_1', 'V_2', 'V_3', 'V_4', 'V_5', 'V_6', 'V_7', 'V_8', 'V_9', 'V_{10}', 'V_{11}', 'V_{12}');
+title('Position')
+xlabel('T');
+ylabel('PX');
+zlabel('PY');
 
 
