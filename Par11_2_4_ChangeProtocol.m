@@ -49,8 +49,8 @@ L = D - A;
 
 % 时间参数
 tbegin = 0;
-tfinal = 20;
-dT = 0.01;
+tfinal = 10;
+dT = 0.001;
 T(:,1) = 0; 
 
 % 计算次数
@@ -71,31 +71,31 @@ for time = 1:1:times
         UYt(i, time) = 0;
         for j = 1:1:length(L)
             if L(i,j)==-1
-%                 % 这里是相邻节点的差值
-%                 pij = sqrt( (PXt(i,time)-PXt(j,time))^2 + (PYt(i,time)-PYt(j,time))^2 );
-%                 
-%                 PXij = PXij + (lambda/(pij^alpha) - mu/(pij^beta)) * ( PXt(i,time)-PXt(j,time) );
-%                 VXij = VXij + kappa * (VXt(i,time)-VXt(j,time));
-%                 
-%                 PYij = PYij + (lambda/(pij^alpha) - mu/(pij^beta)) * ( PYt(i,time)-PYt(j,time) );
-%                 VYij = VYij + kappa * (VYt(i,time)-VYt(j,time));                
-                
                 % 这里是相邻节点的差值
-                PXij = PXij + ( PXt(i,time)-PXt(j,time) );
-                VXij = VXij + ( VXt(i,time)-VXt(j,time) );
+                pij = sqrt( (PXt(i,time)-PXt(j,time))^2 + (PYt(i,time)-PYt(j,time))^2 );
                 
-                PYij = PYij + ( PYt(i,time)-PYt(j,time) );
-                VYij = VYij + ( VYt(i,time)-VYt(j,time) );
+                PXij = PXij + (lambda/(pij^alpha) - mu/(pij^beta)) * ( PXt(i,time)-PXt(j,time) );
+                VXij = VXij + kappa * (VXt(i,time)-VXt(j,time));
+                
+                PYij = PYij + (lambda/(pij^alpha) - mu/(pij^beta)) * ( PYt(i,time)-PYt(j,time) );
+                VYij = VYij + kappa * (VYt(i,time)-VYt(j,time));                
+                
+%                 % 这里是相邻节点的差值
+%                 PXij = PXij + ( PXt(i,time)-PXt(j,time) );
+%                 VXij = VXij + ( VXt(i,time)-VXt(j,time) );
+%                 
+%                 PYij = PYij + ( PYt(i,time)-PYt(j,time) );
+%                 VYij = VYij + ( VYt(i,time)-VYt(j,time) );
 
                 % 最后得到的控制输入，这里是位置与速度的合成方式，可更改
-                UXt(i, time) = UXt(i, time) + ( PXij + VXij );
-                UYt(i, time) = UYt(i, time) + ( PYij + VYij );
+                UXt(i, time) = UXt(i, time) - ( PXij + VXij );
+                UYt(i, time) = UYt(i, time) - ( PYij + VYij );
             end                
         end
     end
     % 迭代过程，一定是加号
-    VXt(:, time+1) = VXt(:, time) - dT * UXt(:, time);
-    VYt(:, time+1) = VYt(:, time) - dT * UYt(:, time);
+    VXt(:, time+1) = VXt(:, time) + dT * UXt(:, time);
+    VYt(:, time+1) = VYt(:, time) + dT * UYt(:, time);
     PXt(:, time+1) = PXt(:, time) + dT * VXt(:, time);
     PYt(:, time+1) = PYt(:, time) + dT * VYt(:, time);
     
