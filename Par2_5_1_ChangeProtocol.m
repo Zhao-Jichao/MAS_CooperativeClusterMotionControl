@@ -19,6 +19,9 @@ PY = [-2 4 -5  3]';
 VX = [0  0  0  0]';
 VY = [0  0  0  0]';
 
+UX = [0  0  0  0]';
+UY = [0  0  0  0]';
+
 % 期望距离：d
 % 通信距离：R
 d = 0.5;
@@ -50,6 +53,7 @@ for time = 1:1:times
         Sum6 = 0;
         Sum7 = 0;
         Par8 = 0;
+        
         % 第一行
         for j=1:4
             % 如果检测到两者之间符合通信关系
@@ -61,6 +65,7 @@ for time = 1:1:times
         if abs(PX(i,time)-ul(1,time)) >= R
             Par2 = nable_fun(PX(i,time),ul(1,time)) * Vij_Fun(PX(i,time),ul(1,time));
         end
+        
         % 第二行
         for j=1:4
         if j~=i && abs(PX(i,time)-PX(j,time)) <= R
@@ -75,6 +80,7 @@ for time = 1:1:times
             Sum3 = Sum3 + sign(Sum4 + Par5);
         end
         end
+        
         % 第三行
         for j=1:4
         if j~=i && abs(PX(i,time)-PX(j,time)) <= R
@@ -99,7 +105,7 @@ for time = 1:1:times
     VX(:,time+1) = VX(:,time) + dT * UX(:,time);
     PX(:,time+1) = PX(:,time) + dT * VX(:,time+1);
     
-    % 更新 X 参数
+    % 更新 Y 参数
     
     % 记录时间
     T(:, time+1) = T(:, time) + dT;
@@ -113,8 +119,8 @@ end
 % zlabel('Y');
 
 figure(2)
-subplot(2,1,1); 
-plot(T(:,1:times),PX(1,1:times),...
+subplot(2,1,1);
+plot( T(:,1:times),PX(1,1:times),...
       T(:,1:times),PX(2,1:times),...
       T(:,1:times),PX(3,1:times),...
       T(:,1:times),PX(4,1:times),...
@@ -122,19 +128,17 @@ plot(T(:,1:times),PX(1,1:times),...
 legend('f1','f2','f3','f4', 'L');
 xlabel('T');
 ylabel('X');
-
 title('Position');
 grid on
 
 subplot(2,1,2); 
-plot(T(:,1:times),VX(1,1:times),...
+plot( T(:,1:times),VX(1,1:times),...
       T(:,1:times),VX(2,1:times),...
       T(:,1:times),VX(3,1:times),...
       T(:,1:times),VX(4,1:times),'linewidth',1.5); 
 legend('f1','f2','f3','f4');
 xlabel('T');
 ylabel('X');
-
 title('Speed');
 grid on
 
