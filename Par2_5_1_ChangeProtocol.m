@@ -5,6 +5,7 @@ clc
 
 % 领航者参数
 ul(:,1) = [5 2]';
+vl(:,1) = [0 0]';
 
 % 跟随者参数
 % PXf1(:,1)= 3; PYf1(:,1)=-2; VXf1(:,1)= 0; VYf1(:,1)= 0;
@@ -36,7 +37,9 @@ for time = 1:1:times
     % 领航者轨迹
     ul(:,time+1) = [5 5]' -3 * cos( (T(:,time)+20)*pi/40 ) * [1 0]'...
                           -3 * sin( (T(:,time)+20)*pi/40 ) * [0 1]';
-    
+    vl(:,time+1) =         3 * sin( (T(:,time)+20)*pi/40 ) * [1 0]'...
+                          -3 * cos( (T(:,time)+20)*pi/40 ) * [0 1]';
+                      
     % 根据距离，计算是否有通信关系，从而得到 L 矩阵
     for i=1:4
         Sum1 = 0;
@@ -47,7 +50,7 @@ for time = 1:1:times
         Sum6 = 0;
         Sum7 = 0;
         Par8 = 0;
-        
+        % 第一行
         for j=1:4
             % 如果检测到两者之间符合通信关系
             if j~=i && abs(PX(i,time)-PX(j,time)) <= R
@@ -58,19 +61,38 @@ for time = 1:1:times
         if abs(PX(i,time)-ul(1,time)) >= R
             Par2 = nable_fun(PX(i,time),ul(1,time)) * Vij_Fun(PX(i,time),ul(1,time));
         end
-        
-        for k=1:4
+        % 第二行
+        for j=1:4
+        if j~=i && abs(PX(i,time)-PX(j,time)) <= R
+            for k=1:4
             if k~=i && abs(PX(i,time)-PX(k,time)) <= R
-                Sum3 = Sum3 + (VX(i,time)-VX(k,time));
+                Sum4 = Sum4 + (VX(i,time)-VX(k,time));
             end
+            end
+            if abs(PX(i,time)-ul(1,time)) >= R
+                Par5 = VX(i,time) - vl(1,time);
+            end
+            Sum3 = Sum3 + sign(Sum4 + Par5);
         end
-        if abs(PX(i,time)-ul(1,time)) >= R
-            Par5 = V
         end
-        
+        % 第三行
+        for j=1:4
+        if j~=i && abs(PX(i,time)-PX(j,time)) <= R
+            for k=1:4
+            if k~=i && abs(PX(i,time)-PX(k,time)) <= R
+                Sum7 = Sum7 + (VX(j,time)-VX(k,time));
+            end
+            end
+            if abs(PX(j,time)-ul(1,time)) >= R
+                Par8 = VX(j,time) - vl(1,time);
+            end
+            Sum6 = Sum6 + sign(Sum7 + Par8);
+        end
+        end
+
         % 计算控制输入
         alpha = 10;
-        UX(i,time+1) = -Sum1 - Par2 - alpha;
+        UX(i,time+1) = -Sum1 - Par2 - alpha*Sum3 + alpha*Sum6;
     end
     
     % 更新 X 参数
