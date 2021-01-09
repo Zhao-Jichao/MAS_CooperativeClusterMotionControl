@@ -30,7 +30,7 @@ R = 1.0;
 % 时间参数
 tbegin = 0;
 tfinal = 60;
-dT = 0.01;
+dT = 0.1;
 T(:,1) = 0; 
 
 % 计算次数
@@ -59,11 +59,11 @@ for time = 1:1:times
             % 如果检测到两者之间符合通信关系
             if j~=i && abs(PX(i,time)-PX(j,time)) <= R
                 % 计算梯度与势函数乘积求和
-                Sum1 = Sum1 + nable_fun(PX(i,time),PX(j,time)) * Vij_Fun(PX(i,time),PX(j,time));
+                Sum1 = Sum1 + nable_fun(PX(i,time),PX(j,time));% * Vij_Fun(PX(i,time),PX(j,time));
             end
         end
         if abs(PX(i,time)-ul(1,time)) >= R
-            Par2 = nable_fun(PX(i,time),ul(1,time)) * Vij_Fun(PX(i,time),ul(1,time));
+            Par2 = nable_fun(PX(i,time),ul(1,time));% * Vij_Fun(PX(i,time),ul(1,time));
         end
         
         % 第二行
@@ -103,7 +103,7 @@ for time = 1:1:times
     
     % 更新 X 参数
     VX(:,time+1) = VX(:,time) + dT * UX(:,time);
-    PX(:,time+1) = PX(:,time) + dT * VX(:,time+1);
+    PX(:,time+1) = PX(:,time) + dT * VX(:,time);
     
     % 更新 Y 参数
     
